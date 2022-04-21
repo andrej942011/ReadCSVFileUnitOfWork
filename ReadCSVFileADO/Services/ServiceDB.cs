@@ -56,15 +56,6 @@ namespace ReadCSVFileADO.Services
         {
             using(var context = _unitOfWork.Create())
             {
-                //Type repositoryType = typeof(TypeRepo);
-                //var metods = repositoryType.GetMethods();
-                //var selectionMetods = metods.Where(m => m.Name == "Get");
-                
-                //var metod = selectionMetods.First();
-                //Console.WriteLine(metod.Name);
-
-                //var instenceOfType = Activator.CreateInstance(repositoryType, new object[] { context._context, context._transaction});
-                //var result1 = metod.Invoke(instenceOfType, new object[] { id});
                 var result1 = CallMethod(context, "Get", new object[] {id}, typeof(TypeRepo));
                 return (T)result1;
             };
@@ -109,7 +100,6 @@ namespace ReadCSVFileADO.Services
 
         private object CallMethod(IUnitOfWorkAdapter adapter, string nameMethod, object[] param, Type repositoryType)
         {
-            //Type repositoryType = typeof(TypeRepo);
             var metods = repositoryType.GetMethods();
             var selectionMetods = metods.Where(m => m.Name == nameMethod);
 

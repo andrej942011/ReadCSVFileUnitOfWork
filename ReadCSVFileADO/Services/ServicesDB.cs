@@ -13,19 +13,31 @@ namespace ReadCSVFileADO.Services
 {
     public class ServicesDB
     {
-        public IService<Category, CategoryRepository> CategoryService { get; set; }
-        public IService<City, CityRepository> CityService { get; set; }
-        public IService<Gender, GenderRepository> GenderService { get; set; }
-        public IService<User, UserRepository> UserService { get; set; }
-        public IService<Information, InformationRepository> InformationService { get; set; }
+        public Dictionary<Type, object> Repositories { get; }
 
         public ServicesDB(IUnitOfWork unitOfWork)
         {
-            CategoryService = new ServiceDB<Category, CategoryRepository>(unitOfWork);
-            CityService = new ServiceDB<City, CityRepository>(unitOfWork);
-            GenderService = new ServiceDB<Gender, GenderRepository>(unitOfWork);
-            UserService = new ServiceDB<User, UserRepository>(unitOfWork);
-            InformationService = new ServiceDB<Information, InformationRepository>(unitOfWork);
+            Repositories = new Dictionary<Type, object>();
+
+            Repositories.Add(typeof(IService<Category, CategoryRepository>), new ServiceDB<Category, CategoryRepository>(unitOfWork));
+            Repositories.Add(typeof(IService<City, CityRepository>), new ServiceDB<City, CityRepository>(unitOfWork));
+            Repositories.Add(typeof(IService<Gender, GenderRepository>), new ServiceDB<Gender, GenderRepository>(unitOfWork));
+            Repositories.Add(typeof(IService<User, UserRepository>), new ServiceDB<User, UserRepository>(unitOfWork));
+            Repositories.Add(typeof(IService<Information, InformationRepository>), new ServiceDB<Information, InformationRepository>(unitOfWork));
+
+            //CategoryService = new ServiceDB<Category, CategoryRepository>(unitOfWork);
+            //CityService = new ServiceDB<City, CityRepository>(unitOfWork);
+            //GenderService = new ServiceDB<Gender, GenderRepository>(unitOfWork);
+            //UserService = new ServiceDB<User, UserRepository>(unitOfWork);
+            //InformationService = new ServiceDB<Information, InformationRepository>(unitOfWork);
+        }
+
+        public TEntity GetRepository<TEntity>() where TEntity: class
+        {
+            if (Repositories.ContainsKey(typeof(TEntity)))
+                return (TEntity)Repositories[typeof(TEntity)];
+            else
+                return (TEntity)null;
         }
     }
 }
