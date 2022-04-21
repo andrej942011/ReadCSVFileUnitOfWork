@@ -10,6 +10,7 @@ using ReadCSVFileADO.ReadFile.Interface;
 using ReadCSVFileADO.ReadFile.Models;
 using ReadCSVFileADO.RepositorySQLServer;
 using ReadCSVFileADO.Services;
+using ReadCSVFileADO.Services.Interface;
 using ReadCSVFileADO.UnitOfWorkSQLServer.Interface;
 using ReadCSVFileADO.View.Inferface;
 
@@ -47,11 +48,9 @@ namespace ReadCSVFileADO.View.BL
                     DateCreate = DateTime.Now,
                     FilePath = filePatch
                 };
-                servicesDb.InformationService.Create(information);
-
-                //
-                //int itemCount = models.Count;
-                //int itemCountMax = itemCount;
+                var serviceInformation = servicesDb.GetRepository<IService<Information, InformationRepository>>();
+                serviceInformation.Create(information);
+                //servicesDb.InformationService.Create(information);
 
                 int itemCount = 0;
                 int itemCountMax = models.Count;
@@ -61,15 +60,6 @@ namespace ReadCSVFileADO.View.BL
 
                     form.UpdateProcessWriting((itemCount * 100) / itemCountMax);
                     itemCount++;
-
-                    //Console.WriteLine(itemCount);
-                    //if (itemCount % 10 == 0)
-                    //{
-                    //    //form.UpdateProcessWriting((itemCount*100)/itemCountMax);
-                    //    //itemCount--;
-                    //    form.UpdateProcessWriting((itemCount * 100) / itemCountMax);
-                    //    itemCount++;
-                    //}
                 }
                 form.UpdateProcessWriting(itemCount);
             }
@@ -85,20 +75,25 @@ namespace ReadCSVFileADO.View.BL
             {
                 CategoryName = contactModel.Category
             };
-            servicesDb.CategoryService.Create(category);
+            var serviceCategory = servicesDb.GetRepository<IService<Category, CategoryRepository>>();
+            serviceCategory.Create(category);
+            //servicesDb.CategoryService.Create(category);
 
             var city = new City()
             {
                 CityName = contactModel.City
             };
-            servicesDb.CityService.Create(city);
+            var serviceCity = servicesDb.GetRepository<IService<City, CityRepository>>();
+            serviceCity.Create(city);
+            //servicesDb.CityService.Create(city);
 
             var gender = new Gender()
             {
                 GenderName = contactModel.Gender
             };
-            servicesDb.GenderService.Create(gender);
-            //var gender = servicesDb.GenderService.GetName(contactModel.Gender);
+            var serviceGender = servicesDb.GetRepository<IService<Gender, GenderRepository>>();
+            serviceGender.Create(gender);
+            //servicesDb.GenderService.Create(gender);
 
             User user = new User()
             {
@@ -109,10 +104,12 @@ namespace ReadCSVFileADO.View.BL
                 DateOfBirth = contactModel.DateOfBirth.ToString(),
                 CategoryId = category.CategoryId,
                 CityId = city.CityId,
-                GenderId = gender.GenderId,//1,//gender.GenderId,
+                GenderId = gender.GenderId,
                 InformationId = information.InformationId
             };
-            servicesDb.UserService.Create(user);
+            var serviceUser = servicesDb.GetRepository<IService<User, UserRepository>>();
+            serviceUser.Create(user);
+            //servicesDb.UserService.Create(user);
         }
 
         public void UpdateProcessWriting(int count)

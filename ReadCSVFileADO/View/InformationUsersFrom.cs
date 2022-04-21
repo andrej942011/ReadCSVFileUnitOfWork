@@ -8,7 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ReadCSVFileADO.DataBase.DataSets;
+using ReadCSVFileADO.RepositorySQLServer;
 using ReadCSVFileADO.Services;
+using ReadCSVFileADO.Services.Interface;
 using ReadCSVFileADO.View.BL;
 
 namespace ReadCSVFileADO.View
@@ -23,7 +25,10 @@ namespace ReadCSVFileADO.View
             this.servicesDb = servicesDb;
             informationBl = new InformationUsersBL(servicesDb);
 
-            var informations = servicesDb.InformationService.GetAll();
+            var serviceInformation = servicesDb.GetRepository<IService<Information, InformationRepository>>();
+
+
+            var informations = serviceInformation.GetAll();//servicesDb.InformationService.GetAll();
             InformationBindingSource.DataSource = informations;
         }
 
