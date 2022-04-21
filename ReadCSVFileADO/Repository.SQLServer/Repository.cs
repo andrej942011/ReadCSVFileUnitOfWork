@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using ReadCSVFileADO.UnitOfWorkSQLServer;
 
 namespace ReadCSVFileADO.RepositorySQLServer
 {
@@ -19,6 +20,11 @@ namespace ReadCSVFileADO.RepositorySQLServer
         {
             this._context = context;
             this._sqlTransaction = transaction;
+        }
+
+        public Repository(UnitOfWorkSqlServerAdapter adapter)
+        {
+            
         }
 
         protected SqlCommand CreateCommand(string query)

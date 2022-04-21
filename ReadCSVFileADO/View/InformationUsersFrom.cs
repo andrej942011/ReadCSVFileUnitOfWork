@@ -11,6 +11,8 @@ using ReadCSVFileADO.DataBase.DataSets;
 using ReadCSVFileADO.RepositorySQLServer;
 using ReadCSVFileADO.Services;
 using ReadCSVFileADO.Services.Interface;
+using ReadCSVFileADO.UnitOfWorkSQLServer;
+using ReadCSVFileADO.UnitOfWorkSQLServer.Interface;
 using ReadCSVFileADO.View.BL;
 
 namespace ReadCSVFileADO.View
@@ -19,22 +21,32 @@ namespace ReadCSVFileADO.View
     {
         private InformationUsersBL informationBl;
         private ServicesDB servicesDb;
+
+        private IUnitOfWorkRepository repository;
+
         public InformationUsersFrom(ServicesDB servicesDb)
         {
             InitializeComponent();
-            this.servicesDb = servicesDb;
-            informationBl = new InformationUsersBL(servicesDb);
+            //this.servicesDb = servicesDb;
 
-            var serviceInformation = servicesDb.GetRepository<IService<Information, InformationRepository>>();
+            Inital();
+            var informationRepository = (InformationRepository)repository.GetRepository<Information>();
+            InformationBindingSource.DataSource = informationRepository.GetAll();
 
+            informationBl = new InformationUsersBL(informationRepository);
+        }
 
-            var informations = serviceInformation.GetAll();//servicesDb.InformationService.GetAll();
-            InformationBindingSource.DataSource = informations;
+        private void Inital()
+        {
+            IUnitOfWork unitOfWork = new UnitOfWorkSqlServer();
+            IUnitOfWorkAdapter unitOfWorkAdapter = unitOfWork.Create();
+            repository = unitOfWorkAdapter.Repositories;
+            
         }
 
         private void informationGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if(e.RowIndex > -1)
+            if (e.RowIndex > -1)
             {
                 if(informationGrid.Rows[e.RowIndex] != null)
                 {

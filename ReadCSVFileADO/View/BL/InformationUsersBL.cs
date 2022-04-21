@@ -7,22 +7,26 @@ using System.Text;
 using System.Threading.Tasks;
 using ReadCSVFileADO.DataBase.DataSets;
 using ReadCSVFileADO.RepositorySQLServer;
+using ReadCSVFileADO.RepositorySQLServer.Interface;
 using ReadCSVFileADO.Services;
 using ReadCSVFileADO.Services.Interface;
+using ReadCSVFileADO.UnitOfWorkSQLServer.Interface;
 
 namespace ReadCSVFileADO.View.BL
 {
     public class InformationUsersBL
     {
-        private ServicesDB servicesDb;
-        public InformationUsersBL(ServicesDB servicesDb)
+        private IInformationRepository informationRepository;
+
+
+        public InformationUsersBL(IInformationRepository repository)
         {
-            this.servicesDb = servicesDb;
+            this.informationRepository = repository;
         }
 
         public DataTable GetInformationId(int id)
         {
-            var serviceUser = servicesDb.GetRepository<IService<User, UserRepository>>();
+            //var serviceUser = servicesDb.GetRepository<IService<User, UserRepository>>();
 
             string query = "SELECT * FROM [dbo].[Users]" +
                            "WITH(NOLOCK)" +
@@ -34,8 +38,7 @@ namespace ReadCSVFileADO.View.BL
                             "ON [Users].[CityId] = [Cities].[CityId]" +
                             "WHERE [InformationId] = @Id";
 
-            return  serviceUser.ExecuteReaderTable(query, new SqlParameter[] { new System.Data.SqlClient.SqlParameter("@Id", id)});
-            //return  servicesDb.UserService.ExecuteReaderTable(query, new SqlParameter[] { new System.Data.SqlClient.SqlParameter("@Id", id) });//GetAll();
+            return informationRepository.ExecuteReaderTable(query, new SqlParameter[] { new System.Data.SqlClient.SqlParameter("@Id", id)});
         }
     }
 }

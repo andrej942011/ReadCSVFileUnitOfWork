@@ -48,9 +48,8 @@ namespace ReadCSVFileADO.View.BL
                     DateCreate = DateTime.Now,
                     FilePath = filePatch
                 };
-                var serviceInformation = servicesDb.GetRepository<IService<Information, InformationRepository>>();
-                serviceInformation.Create(information);
-                //servicesDb.InformationService.Create(information);
+                //var serviceInformation = servicesDb.GetRepository<IService<Information, InformationRepository>>();
+                //serviceInformation.Create(information);
 
                 int itemCount = 0;
                 int itemCountMax = models.Count;
@@ -75,25 +74,23 @@ namespace ReadCSVFileADO.View.BL
             {
                 CategoryName = contactModel.Category
             };
-            var serviceCategory = servicesDb.GetRepository<IService<Category, CategoryRepository>>();
-            serviceCategory.Create(category);
+            var serviceCategory = servicesDb.GetRepository<Category, CategoryRepository>(); //servicesDb.GetRepository<IService<Category, CategoryRepository>>();
+            //serviceCategory.Create(category);
             //servicesDb.CategoryService.Create(category);
 
             var city = new City()
             {
                 CityName = contactModel.City
             };
-            var serviceCity = servicesDb.GetRepository<IService<City, CityRepository>>();
-            serviceCity.Create(city);
-            //servicesDb.CityService.Create(city);
+            //var serviceCity = servicesDb.GetRepository<IService<City, CityRepository>>();
+            //serviceCity.Create(city);
 
             var gender = new Gender()
             {
                 GenderName = contactModel.Gender
             };
-            var serviceGender = servicesDb.GetRepository<IService<Gender, GenderRepository>>();
-            serviceGender.Create(gender);
-            //servicesDb.GenderService.Create(gender);
+            //var serviceGender = servicesDb.GetRepository<IService<Gender, GenderRepository>>();
+            //serviceGender.Create(gender);
 
             User user = new User()
             {
@@ -107,9 +104,8 @@ namespace ReadCSVFileADO.View.BL
                 GenderId = gender.GenderId,
                 InformationId = information.InformationId
             };
-            var serviceUser = servicesDb.GetRepository<IService<User, UserRepository>>();
-            serviceUser.Create(user);
-            //servicesDb.UserService.Create(user);
+            //var serviceUser = servicesDb.GetRepository<IService<User, UserRepository>>();
+            //serviceUser.Create(user);
         }
 
         public void UpdateProcessWriting(int count)

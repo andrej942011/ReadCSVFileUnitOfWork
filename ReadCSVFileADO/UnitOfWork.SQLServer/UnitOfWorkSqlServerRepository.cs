@@ -15,15 +15,20 @@ namespace ReadCSVFileADO.UnitOfWorkSQLServer
     public class UnitOfWorkSqlServerRepository:IUnitOfWorkRepository
     {
         public Dictionary<Type, object> Repositories { get; set; }
+        private SqlConnection _context;
+        private SqlTransaction _transaction;
+
         public UnitOfWorkSqlServerRepository(SqlConnection context, SqlTransaction transaction)
         {
-            Repositories = new Dictionary<Type, object>();
+            this._context = context;
+            this._transaction = transaction;
+            //Repositories = new Dictionary<Type, object>();
 
-            Repositories.Add(typeof(Category), new CategoryRepository(context, transaction));
-            Repositories.Add(typeof(City), new CityRepository(context, transaction));
-            Repositories.Add(typeof(Gender), new GenderRepository(context, transaction));
-            Repositories.Add(typeof(Information), new InformationRepository(context, transaction));
-            Repositories.Add(typeof(User), new UserRepository(context, transaction));
+            //Repositories.Add(typeof(Category), new CategoryRepository(context, transaction));
+            //Repositories.Add(typeof(City), new CityRepository(context, transaction));
+            //Repositories.Add(typeof(Gender), new GenderRepository(context, transaction));
+            //Repositories.Add(typeof(Information), new InformationRepository(context, transaction));
+            //Repositories.Add(typeof(User), new UserRepository(context, transaction));
         }
 
         public object GetRepository<TEntity>()
@@ -45,7 +50,7 @@ namespace ReadCSVFileADO.UnitOfWorkSQLServer
                             type.BaseType != null &&
                             type.BaseType.Equals(typeof(Repository<TEntity>)));
 
-            var repositoryInstance = Activator.CreateInstance(repositoryType, Repositories.Values) ??
+            var repositoryInstance = Activator.CreateInstance(repositoryType, new object[] {_context, _transaction}) ?? //CreateInstance(repositoryType, Repositories.Values)
                                      throw new Exception($"Cannot create instance of {repositoryType.Name}");
 
             Repositories[entityType] = repositoryInstance;
